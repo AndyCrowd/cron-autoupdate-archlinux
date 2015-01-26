@@ -17,7 +17,7 @@ if [ ${ST[1]} -gt 60 ]  || [ ${ST[0]} == 'charging' ] || [ ${ST[0]} == 'fully-ch
 
 if [ "$(/usr/local/bin/CheckPower.sh)" == "OK" ];then
 
-/usr/local/bin/NeededToUpdate.sh | pacman -S --needed --noconfirm - | zenity --progress --no-cancel  --pulsate --title="Uppdaterar" --auto-close
+yes | pacman -S --needed --noconfirm $(/usr/local/bin/NeededToUpdate.sh)  | zenity --progress --no-cancel  --pulsate --title="Uppdaterar" --auto-close
 
 sleep 1
 systemctl daemon-reload
