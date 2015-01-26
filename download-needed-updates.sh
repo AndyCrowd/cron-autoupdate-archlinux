@@ -78,13 +78,8 @@ fi
 
 ########### END CheckPower
 
-#xmessage -timeout 1 $(whoami) 
-#& disown
-if [ -f "/var/lib/pacman/db.lck" ];then 
-#beep -f 9000
-#beep 
-#beep -f 9000
-#beep
+if [[ -f "/var/lib/pacman/db.lck" && -z "$(pidof pacman)"  ]];then 
+
 AA=$(pidof pacman)
 if [ -z "$AA" ]; then
 rm /var/lib/pacman/db.lck ;
@@ -134,14 +129,10 @@ else
 OK_OK='Fail'
 fi
 
-
    if [ "${TI}" -gt "${MAXw}" ]; then
 STARTit=$(date '+%M-%S')
 
-#echo 'down=yes' > /tmp/.updated_down_needed
-    IS_Conn="0"
-
-#xmessage -timeout 2 "Start update"
+xmessage -timeout 2 "Starting downloading of updates" & disown
 #echo $OK_OK
 
     if [ "${OKOK}" == "OK" ]; then
@@ -150,22 +141,18 @@ echo 'down=yes' > /tmp/.updated_down_needed
 xmessage -timeout 3 "Started updating" & disown
 
 pacman-db-upgrade
-#sleep 1
+
 pacman -Sy --noconfirm
 
-#sleep 1
+yes | pacman -S --needed --noconfirm $(pacman -Ssq | grep -e ^jre -e ^jdk | grep 'openjdk'$ )
 
-pacman -Ssq | grep -e ^jre -e ^jdk | grep 'openjdk'$ | pacman -S --needed --noconfirm -
-#sleep 1
-#pacman-db-upgrade
-#sleep 1
-
-pacman -Sw --noconfirm  --needed $(/usr/local/bin/NeededToUpdate.sh)
-#sleep 1
-# pacman-db-upgrade
+/usr/local/bin/NeededToUpdate.sh | pacman -Sw --noconfirm --needed -
+SSS=$?
+sleep 1
+pacman-db-upgrade
 #echo 'down=yes' > /tmp/.updated_down_needed
 ENDit="$(date '+%M-%S')"
-xmessage "${STARTit}"' * '"${ENDit}" & disown
+xmessage -timeout 3 "${STARTit}"' * '"${ENDit}" & disown
 #beep -f 90
 #beep -f 50
     fi
