@@ -21,10 +21,10 @@ if [ "$(/usr/local/bin/CheckPower.sh)" == "OK" ];then
  if [ ${?} == "0" ];then
 echo 'down=yes' > /tmp/.updated_down_all
 pacman -Suw --noconfirm
-pacman -Sw --noconfirm --needed $(pacman -Ssq | grep ^jre | grep 'openjdk'$)
+pacman -Ss --noconfirm --needed $(pacman -Ssq | grep ^jre | grep 'openjdk'$)
 yes | pacman -Su
 if [ "${?}" != "0"  ];then beep -f 100 -l 1000 && zenity --warning --text="Ett problem har uppstått. Kontakta Andy!";
-if [ -f "/var/lib/pacman/db.lck"  ];then zenity --warning --text="Databasfilen är skadat eller används: /var/lib/pacman/db.lck";fi;fi;    
+if [ -f "/var/lib/pacman/db.lck"  ];then zenity --warning --text="Databasfilen är skadat eller används: /var/lib/pacman/db.lck";fi;fi;
 systemctl daemon-reload
 pacman-db-upgrade
    fi
